@@ -70,8 +70,8 @@ var baseHeight = 112; //Base-Ground png's actual height
 var bx = 40; //Bird's Width
 var by = 40; //Bird's Height
 var velocityY = 0; //Bird's current vertical velocity
-var flapVelocity = -8; //Upward velocity applied on flap
-var gravity = 0.45; //Acceleration applied each frame
+var flapVelocity = -5.5; //Upward velocity applied on flap
+var gravity = 0.2; //Acceleration applied each frame
 var pipeDist = 450;// Distance b/w North and South Pipe
 var px = 51; //pipe's width
 var py = 317; //pipe's height
@@ -84,6 +84,7 @@ var date = new Date(); // To get Current Date
 var birdArray = new Array(); //Array to store the down,mid,up frames of the bird
 var pipeArray = [];
 var pause = false;
+var lastFrameTime;
 
 function stopAudio(audio) {    //Function to stop audio the current audio from playing
     audio.pause();
@@ -144,11 +145,13 @@ function birdFramesInitialiser(){
 function pipe(p,q){
 	this.p = p;
 	this.q = q;
+	this.scored = false;
 
 	this.update = function(){
 		if(this.p <= -px){
 			this.p = (canvasWidth-px)+20;
 			this.q = -1*(Math.random()*170);
+			this.scored = false;
 		}
 	}
 
@@ -173,8 +176,9 @@ function pipe(p,q){
 
 	this.score = function(){
 
-		if(x==(this.p+px) && (y>(this.q+py)) && (y<(this.q+pipeDist))) {
+		if(!this.scored && (this.p+px)<x && (y>(this.q+py)) && (y<(this.q+pipeDist))) {
 			score++;
+			this.scored = true;
 			point.play();
 		}
 
@@ -229,7 +233,16 @@ document.addEventListener('keydown',function(event){
 				}
 			}, false);
 
-function draw(){
+function draw(timestamp){
+	if(timestamp === undefined){
+		timestamp = performance.now();
+	}
+	if(lastFrameTime === undefined){
+		lastFrameTime = timestamp;
+	}
+	var frameScale = Math.min((timestamp-lastFrameTime)/(1000/60), 2);
+	lastFrameTime = timestamp;
+
 	ctx.drawImage(bg,0,0,canvasWidth,canvasHeight);
 	ctx.drawImage(birdArray[Math.floor(b%3)],x,y,bx,by);
 	for(j=0; j<pipeArray.length; j++){
@@ -238,7 +251,7 @@ function draw(){
 		ctx.drawImage(pipeSouth,pipeArray[j].p,pipeArray[j].q+pipeDist);
 		pipeArray[j].collide();
 		pipeArray[j].score();
-		pipeArray[j].p-=pdx;
+		pipeArray[j].p-=pdx*frameScale;
 	}
 	ctx.drawImage(base,0,canvasHeight-baseHeight,canvasWidth,baseHeight);
 	ctx.fillStyle= '#000000';
@@ -249,8 +262,8 @@ function draw(){
 	if(b==0.3){
 		b=0;
 	}
-	velocityY+=gravity;
-	y+=velocityY;
+	velocityY+=gravity*frameScale;
+	y+=velocityY*frameScale;
 
 	if(pause==true){
 
