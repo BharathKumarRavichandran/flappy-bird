@@ -199,12 +199,27 @@ function gameInitialiser(){
 	ctx.font = '25px Arial';
 }
 
+function flap(){
+	if(pause){
+		window.location.reload();
+		return;
+	}
+
+	y=y-dy;
+	wing.play();
+}
+
 document.addEventListener('keydown',function(event){
-				if(event.keyCode==32){ //Spacebar keycode
-					y=y-dy;
-					wing.play();  
-				}
-			}, false);
+	if(event.code === 'Space'){
+		event.preventDefault();
+		flap();
+	}
+}, false);
+
+canvas.addEventListener('pointerdown', function(event){
+	event.preventDefault();
+	flap();
+}, false);
 
 document.addEventListener('keydown',function(event){
 				if(event.keyCode == 82){ //r keyCode

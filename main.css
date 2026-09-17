@@ -31,6 +31,7 @@ canvas {
 	height: auto;
 	border-radius: 20px;
 	box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+	touch-action: manipulation;
 }
 
 footer {
