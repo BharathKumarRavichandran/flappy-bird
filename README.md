@@ -7,8 +7,9 @@ The original game is written by Nguyễn Hà Đông.
 http://en.wikipedia.org/wiki/Flappy_Bird
 
 ## How To Play
-* Tap spacebar to make the bird fly upward.
-* If the bird touches on the ground or a pipe, the game ends.
+* Press the spacebar, click, or tap the game to make the bird fly upward.
+* If the bird touches the ground or a pipe, the game ends.
+* Press `R`, click, or tap after game over to restart.
 
 ## Features 
 * Simple controls

@@ -69,8 +69,9 @@ var baseWidth = 336; //Base-Ground png's actual width
 var baseHeight = 112; //Base-Ground png's actual height
 var bx = 40; //Bird's Width
 var by = 40; //Bird's Height
-var dy = 55; //Bird's Uppertap Velocity
-var g = 1.8; //Bird's gravity variable
+var velocityY = 0; //Bird's current vertical velocity
+var flapVelocity = -8; //Upward velocity applied on flap
+var gravity = 0.45; //Acceleration applied each frame
 var pipeDist = 450;// Distance b/w North and South Pipe
 var px = 51; //pipe's width
 var py = 317; //pipe's height
@@ -205,7 +206,7 @@ function flap(){
 		return;
 	}
 
-	y=y-dy;
+	velocityY=flapVelocity;
 	wing.play();
 }
 
@@ -248,7 +249,8 @@ function draw(){
 	if(b==0.3){
 		b=0;
 	}
-	y+=g;
+	velocityY+=gravity;
+	y+=velocityY;
 
 	if(pause==true){
 
